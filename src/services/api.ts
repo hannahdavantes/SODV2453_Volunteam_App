@@ -11,9 +11,14 @@ const api = axios.create({
     //
     // To use `my-json-server`, make sure your `db.json` is located at the repo root.
 
-    baseURL: 'http://0.0.0.0:3333',
+    // baseURL: 'http://0.0.0.0:3333',
+    baseURL: 'http://192.168.1.96:3333',
 });
 
 export const authenticateUser = (email: string, password: string): Promise<AxiosResponse> => {
     return api.post(`/login`, { email, password });
+};
+
+export const getEvents = (): Promise<AxiosResponse> => {
+    return api.get(`/events`);
 };
