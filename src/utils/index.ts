@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Platform } from 'react-native';
 import { LatLng } from 'react-native-maps';
 

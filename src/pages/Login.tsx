@@ -91,7 +91,7 @@ export default function Login({ navigation }: StackScreenProps<any>) {
             colors={['#7048D8', '#7048D8']}
             style={styles.gradientContainer}
         >
-            {isFocused && <StatusBar animated translucent style="light" />}
+            {isFocused && <StatusBar animated style="light" />}
             <KeyboardAwareScrollView
                 style={styles.container}
                 contentContainerStyle={{

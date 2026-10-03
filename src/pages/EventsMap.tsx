@@ -87,14 +87,14 @@ export default function EventsMap(props: StackScreenProps<any>) {
 
 const styles = StyleSheet.create({
     container: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
 
     mapStyle: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
     },
 
     logoutButton: {
