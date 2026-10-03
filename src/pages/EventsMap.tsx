@@ -2,10 +2,11 @@ import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import * as Location from 'expo-location';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { LatLng, Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import customMapStyle from '../../map-style.json';
 import * as MapSettings from '../constants/MapSettings';
 import { AuthenticationContext } from '../context/AuthenticationContext';
@@ -19,6 +20,8 @@ export default function EventsMap(props: StackScreenProps<any>) {
     const authenticationContext = useContext(AuthenticationContext);
     const mapViewRef = useRef<MapView>(null);
     const [events, setEvents] = useState<Event[]>([]);
+    const [userLocation, setUserLocation] = useState<LatLng>();
+    const [isMapReady, setIsMapReady] = useState(false);
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -30,7 +33,29 @@ export default function EventsMap(props: StackScreenProps<any>) {
                 setEvents(allEvents.filter((event) => event.dateTime > now));
             })
             .catch((error) => console.log(error));
+
+        Location.requestForegroundPermissionsAsync()
+            .then(({ granted }) => (granted ? Location.getCurrentPositionAsync() : null))
+            .then((location) => {
+                if (location) {
+                    const { latitude, longitude } = location.coords;
+                    setUserLocation({ latitude, longitude });
+                }
+            })
+            .catch((error) => console.log(error));
     }, [isFocused]);
+
+    // Re-fits whenever events are (re)loaded or the user's location arrives
+    useEffect(() => {
+        if (!isMapReady) return;
+        const coordinates: LatLng[] = events.map(({ position }) => ({
+            latitude: position.latitude,
+            longitude: position.longitude,
+        }));
+        if (userLocation) coordinates.push(userLocation);
+        if (coordinates.length === 0) return;
+        mapViewRef.current?.fitToCoordinates(coordinates, { edgePadding: MapSettings.EDGE_PADDING });
+    }, [isMapReady, events, userLocation]);
 
     const handleNavigateToCreateEvent = () => {};
 
@@ -57,15 +82,7 @@ export default function EventsMap(props: StackScreenProps<any>) {
                 toolbarEnabled={false}
                 moveOnMarkerPress={false}
                 mapPadding={MapSettings.EDGE_PADDING}
-                onLayout={() =>
-                    mapViewRef.current?.fitToCoordinates(
-                        events.map(({ position }) => ({
-                            latitude: position.latitude,
-                            longitude: position.longitude,
-                        })),
-                        { edgePadding: MapSettings.EDGE_PADDING }
-                    )
-                }
+                onMapReady={() => setIsMapReady(true)}
             >
                 {events.map((event) => {
                     return (

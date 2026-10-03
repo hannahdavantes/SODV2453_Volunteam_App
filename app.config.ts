@@ -28,6 +28,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             },
         ],
         [
+            'expo-location',
+            {
+                locationWhenInUsePermission: 'The app uses your location to show nearby events on the map.',
+            },
+        ],
+        [
             'expo-image-picker',
             {
                 photosPermission: 'The app accesses your photos to let you add them to events.',
