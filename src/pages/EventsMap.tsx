@@ -10,6 +10,8 @@ import MapView, { LatLng, Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'reac
 import customMapStyle from '../../map-style.json';
 import * as MapSettings from '../constants/MapSettings';
 import { AuthenticationContext } from '../context/AuthenticationContext';
+import mapMarkerBlueImg from '../images/map-marker-blue.png';
+import mapMarkerGreyImg from '../images/map-marker-grey.png';
 import mapMarkerImg from '../images/map-marker.png';
 import * as api from '../services/api';
 import { Event } from '../types/Event';
@@ -57,9 +59,20 @@ export default function EventsMap(props: StackScreenProps<any>) {
         mapViewRef.current?.fitToCoordinates(coordinates, { edgePadding: MapSettings.EDGE_PADDING });
     }, [isMapReady, events, userLocation]);
 
+    const hasVolunteered = (event: Event) => event.volunteersIds.includes(authenticationContext?.value?.id ?? '');
+    const volunteeredCount = events.filter(hasVolunteered).length;
+
+    const getMarkerImage = (event: Event) => {
+        if (hasVolunteered(event)) return mapMarkerBlueImg;
+        if (event.volunteersIds.length >= event.volunteersNeeded) return mapMarkerGreyImg;
+        return mapMarkerImg;
+    };
+
     const handleNavigateToCreateEvent = () => {};
 
-    const handleNavigateToEventDetails = () => {};
+    const handleNavigateToEventDetails = (event: Event) => {
+        navigation.navigate('EventDetails', { event: { ...event, dateTime: event.dateTime.toISOString() } });
+    };
 
     const handleLogout = async () => {
         AsyncStorage.multiRemove(['userInfo', 'accessToken']).then(() => {
@@ -92,16 +105,18 @@ export default function EventsMap(props: StackScreenProps<any>) {
                                 latitude: event.position.latitude,
                                 longitude: event.position.longitude,
                             }}
-                            onPress={handleNavigateToEventDetails}
+                            onPress={() => handleNavigateToEventDetails(event)}
                         >
-                            <Image resizeMode="contain" style={{ width: 48, height: 54 }} source={mapMarkerImg} />
+                            <Image resizeMode="contain" style={{ width: 48, height: 54 }} source={getMarkerImage(event)} />
                         </Marker>
                     );
                 })}
             </MapView>
 
             <View style={styles.footer}>
-                <Text style={styles.footerText}>{events.length} event(s) found</Text>
+                <Text style={styles.footerText}>
+                    {events.length} event(s) found · {volunteeredCount} volunteered
+                </Text>
                 <RectButton
                     style={[styles.smallButton, { backgroundColor: '#00A3FF' }]}
                     onPress={handleNavigateToCreateEvent}

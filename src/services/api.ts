@@ -22,3 +22,7 @@ export const authenticateUser = (email: string, password: string): Promise<Axios
 export const getEvents = (): Promise<AxiosResponse> => {
     return api.get(`/events`);
 };
+
+export const getUser = (id: string): Promise<AxiosResponse> => {
+    return api.get(`/users/${id}`);
+};

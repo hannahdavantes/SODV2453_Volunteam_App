@@ -54,6 +54,19 @@
             },
             "volunteersNeeded": 2,
             "volunteersIds": ["EF-BZ00", "Q5bVHgP"]
+        },
+        {
+            "id": "5f2c8e1a-3b7d-4c9e-a1f6-8d2b4e7c9a03",
+            "dateTime": "2027-03-13T17:00:00.000Z",
+            "description": "Help us clean up the riverbank along the Elbow River pathway. Gloves, bags and snacks are provided.\n\nREQUIREMENTS:\n* Comfortable outdoor clothing.\n* 3 hour commitment, from 10:00 AM to 1:00 PM.",
+            "name": "Elbow River Cleanup",
+            "organizerId": "Hr-40KW",
+            "position": {
+                "latitude": 51.0335,
+                "longitude": -114.0712
+            },
+            "volunteersNeeded": 6,
+            "volunteersIds": ["3UN3-2L", "tRHltUh"]
         }
     ],
     "users": [
