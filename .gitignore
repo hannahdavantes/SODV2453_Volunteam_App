@@ -37,12 +37,3 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
-
-# Coverage / test output
-coverage/
-
-# Optional: generated Expo native folders
-# Uncomment only if this is a managed Expo project and you do not intend to
-# commit generated native Android/iOS projects.
-# /android
-# /ios
